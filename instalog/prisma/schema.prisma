@@ -19,7 +19,6 @@ model Event {
   object           String
   actor            Actor    @relation(fields: [actorId], references: [id])
   actorId          Int
-  group            String
   action           Action   @relation(fields: [actionId], references: [id])
   actionId         Int
   target           Target   @relation(fields: [targetId], references: [id])
