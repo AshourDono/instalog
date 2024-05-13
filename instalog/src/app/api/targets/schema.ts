@@ -1,6 +1,8 @@
 import { string, z } from 'zod';
 
-z.object({
+const schema = z.object({
   name: string().email(),
   location: string(),
 });
+
+export default schema;

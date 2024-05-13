@@ -14,42 +14,41 @@ datasource db {
 }
 
 model Event {
-  id               Int      @id @default(autoincrement())
-  eventGeneratedId String
-  object           String
-  actor            Actor    @relation(fields: [actorId], references: [id])
-  actorId          Int
-  action           Action   @relation(fields: [actionId], references: [id])
-  actionId         Int
-  target           Target   @relation(fields: [targetId], references: [id])
-  targetId         Int
-  location         String
-  occured_at       DateTime @default(now())
-  redirect         String
-  description      String
-  x_request_id     String
+  id           Int      @id @default(autoincrement())
+  generatedId  String
+  object       String
+  actor        Actor    @relation(fields: [actorId], references: [id])
+  actorId      Int
+  action       Action   @relation(fields: [actionId], references: [id])
+  actionId     Int
+  target       Target   @relation(fields: [targetId], references: [id])
+  targetId     Int
+  occured_at   DateTime @default(now())
+  redirect     String
+  description  String
+  x_request_id String
 }
 
 model Actor {
-  id               Int     @id @default(autoincrement())
-  actorGeneratedId String
-  name             String
-  group            String
-  Event            Event[]
+  id          Int     @id @default(autoincrement())
+  generatedId String
+  name        String
+  group       String
+  Event       Event[]
 }
 
 model Target {
-  id                Int     @id @default(autoincrement())
-  targetGeneratedId String
-  name              String  @unique
-  location          String
-  Event             Event[]
+  id          Int     @id @default(autoincrement())
+  generatedId String
+  name        String  @unique
+  location    String
+  Event       Event[]
 }
 
 model Action {
-  id                Int     @id @default(autoincrement())
-  actionGeneratedId String
-  object            String
-  name              String
-  Event             Event[]
+  id          Int     @id @default(autoincrement())
+  generatedId String
+  object      String
+  name        String
+  Event       Event[]
 }
