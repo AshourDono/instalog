@@ -26,7 +26,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         target: {
           select: {
             generatedId: true,
-            name: true,
+            email: true,
             location: true,
           },
         },

@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -17,11 +18,11 @@ model Event {
   id           Int      @id @default(autoincrement())
   generatedId  String
   object       String
-  actor        Actor    @relation(fields: [actorId], references: [id])
+  actor        User     @relation("ActorAsActor", fields: [actorId], references: [id], onDelete: Cascade)
   actorId      Int
-  action       Action   @relation(fields: [actionId], references: [id])
+  action       Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
   actionId     Int
-  target       Target   @relation(fields: [targetId], references: [id])
+  target       User     @relation("ActorAsTarget", fields: [targetId], references: [id], onDelete: Cascade)
   targetId     Int
   occured_at   DateTime @default(now())
   redirect     String
@@ -29,20 +30,15 @@ model Event {
   x_request_id String
 }
 
-model Actor {
-  id          Int     @id @default(autoincrement())
-  generatedId String
-  name        String
-  group       String
-  Event       Event[]
-}
-
-model Target {
-  id          Int     @id @default(autoincrement())
-  generatedId String
-  name        String  @unique
-  location    String
-  Event       Event[]
+model User {
+  id             Int     @id @default(autoincrement())
+  generatedId    String
+  name           String
+  email          String  @unique
+  group          String
+  location       String
+  eventsAsActor  Event[] @relation("ActorAsActor")
+  eventsAsTarget Event[] @relation("ActorAsTarget")
 }
 
 model Action {
@@ -50,5 +46,5 @@ model Action {
   generatedId String
   object      String
   name        String
-  Event       Event[]
+  events      Event[]
 }

@@ -5,8 +5,7 @@ const schema = z.object({
   actorId: number(),
   actionId: number(),
   targetId: number(),
-  redirect: string(),
-  description: string(),
+  redirect: string()
 });
 
 export default schema;

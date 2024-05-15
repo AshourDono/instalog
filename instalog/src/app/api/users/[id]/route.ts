@@ -5,13 +5,14 @@ import { formatResponseData } from '@/app/middlewares/mappers';
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-    let target = await prisma.target.findFirstOrThrow({
+    let user = await prisma.user.findFirstOrThrow({
       where: { id: +params.id },
+      select: { generatedId: true, name: true, group: true, email: true, location: true },
     });
 
-    let formattedTargetResponse = formatResponseData(target);
+    let formattedUserResponse = formatResponseData(user);
 
-    return NextResponse.json(formattedTargetResponse, { status: 200 });
+    return NextResponse.json(formattedUserResponse, { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 400 });
   }

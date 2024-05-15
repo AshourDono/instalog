@@ -27,7 +27,7 @@ export function formatEventResponseData(response) {
         name: event.action.name,
       },
       target_id: event.target.generatedId,
-      target_name: event.target.name,
+      target_name: event.target.email,
       location: event.target.location,
       occurred_at: event.occured_at,
       metadata: {
@@ -49,7 +49,7 @@ export function formatEventResponseData(response) {
       name: response.action.name,
     },
     target_id: response.target.generatedId,
-    target_name: response.target.name,
+    target_name: response.target.email,
     location: response.target.location,
     occurred_at: response.occured_at,
     metadata: {

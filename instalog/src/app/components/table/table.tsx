@@ -1,7 +1,28 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+'use client';
+import useSWR from 'swr';
+import dayjs from 'dayjs';
+
+type event = {
+  target_name: string | null | undefined;
+  action: {
+    name: string | null | undefined;
+  };
+  occured_at: string | Date | null | undefined;
+};
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+// const isLive: boolean = false;
 
 function Table() {
+  const { data, error, isLoading } = useSWR(
+    '/api/events',
+    fetcher
+    // isLive ? { refreshInterval: 1 } : undefined
+  );
+
+  if (error) return <div>Failed to load data</div>;
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <>
       <table className='table-auto w-[933px]'>
@@ -19,58 +40,26 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          <tr className='table-row h-[46px]'>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[23px] me-[10px] text-[12px] font-bold text-white uppercase w-[9px] h-[15px] px-[8px] py-[5px] rounded-full bg-gradient-to-tl from-[#B325E2] to-[#F3994A]'>
-                a
-              </span>
-              <span>ali@instatus.com</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>user.searched_activity_log_events</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>Aug 7, 5:38 PM</span>
-            </td>
-          </tr>
-          {/* <tr className='table-row h-[46px]'>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[23px] me-[20px] uppercase w-[25px] h-[25px] rounded-full bg-gradient-to-r from-[#F3994A] to-[#B325E2]'>
-                a
-              </span>
-              <span>ali@instatus.com</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>user.searched_activity_log_events</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>Aug 7, 5:38 PM</span>
-            </td>
-          </tr>
-          <tr className='table-row h-[46px]'>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px] me-[23.5px] uppercase'>a</span>
-              <span>ali@instatus.com</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>user.searched_activity_log_events</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>Aug 7, 5:38 PM</span>
-            </td>
-          </tr>
-          <tr className='table-row h-[46px]'>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px] me-[23.5px] uppercase'>a</span>
-              <span>ali@instatus.com</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>user.searched_activity_log_events</span>
-            </td>
-            <td className='table-cell text-start text-[14px] font-normal'>
-              <span className='ms-[18px]'>Aug 7, 5:38 PM</span>
-            </td>
-          </tr> */}
+          {data?.map(
+            (event: event) => (
+              <tr className='table-row h-[46px]'>
+                <td className='table-cell text-start text-[14px] font-normal'>
+                  <span className='ms-[23px] me-[10px] text-[12px] font-bold text-white uppercase w-[9px] h-[15px] px-[8px] py-[5px] rounded-full bg-gradient-to-tl from-[#B325E2] to-[#F3994A]'>
+                    {event?.target_name?.at(0)}
+                  </span>
+                  <span>{event?.target_name}</span>
+                </td>
+                <td className='table-cell text-start text-[14px] font-normal'>
+                  <span className='ms-[18px]'>{event?.action?.name}</span>
+                </td>
+                <td className='table-cell text-start text-[14px] font-normal'>
+                  <span className='ms-[18px]'>
+                    {dayjs(event.occured_at).format('MMM D, h:mm A')}
+                  </span>
+                </td>
+              </tr>
+            )
+          )}
         </tbody>
       </table>
     </>
