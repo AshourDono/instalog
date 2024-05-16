@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
 
-function SearchButton({ handleSearch, keyword }) {
-
+function SearchButton({ handleSearch, keyword }: { handleSearch: any, keyword: string }) {
   return (
     <>
       <div className='w-[650px] flex justify-start text-[#959595]'>

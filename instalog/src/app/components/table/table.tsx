@@ -24,7 +24,7 @@ function Table({
   toggleDetails,
   toggleEvents,
   eventsMode,
-}) {
+}: any) {
   if (error) return <div>Failed to load data</div>;
   if (isLoading) return <Loading />;
   return (
