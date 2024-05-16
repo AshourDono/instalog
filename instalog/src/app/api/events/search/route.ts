@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import prisma from '../../../../../prisma/client';
-import { formatEventResponseData } from '@/app/middlewares/mappers';
 
 export async function GET(request: NextRequest) {
   const url: any = new URL(request.url);
@@ -18,7 +17,7 @@ export async function GET(request: NextRequest) {
       where: {
         OR: [
           {
-            target: {
+            actor: {
               email: {
                 contains: queryParam,
               },
@@ -41,39 +40,22 @@ export async function GET(request: NextRequest) {
         ],
       },
       select: {
-        generatedId: true,
-        object: true,
+        id: true,
         actor: {
           select: {
-            generatedId: true,
-            name: true,
-            group: true,
+            email: true,
           },
         },
         action: {
           select: {
-            generatedId: true,
-            object: true,
             name: true,
           },
         },
-        target: {
-          select: {
-            generatedId: true,
-            email: true,
-            location: true,
-          },
-        },
         occured_at: true,
-        redirect: true,
-        description: true,
-        x_request_id: true,
       },
     });
 
-    let formattedEventResponse = formatEventResponseData(events);
-
-    return NextResponse.json(events, { status: 200 });
+    return NextResponse.json({ events: events }, { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 400 });
   }

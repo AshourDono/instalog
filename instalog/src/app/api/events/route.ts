@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../../prisma/client';
 import schema from '@/app/api/events/schema';
 import { generateCustomId } from '@/app/utils/generateCustomId';
-import { formatEventResponseData } from '@/app/middlewares/mappers';
 import { formatDescription } from '@/app/utils/formatDescription';
 
 type action = {
@@ -11,41 +10,31 @@ type action = {
 };
 
 export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const pageNumber: number | null = Number(searchParams!.get('page'));
+  const pageLimit: number = 10;
+
+  let loadMoreTries = (await prisma.event.count()) / pageLimit;
+
   let events = await prisma.event.findMany({
     select: {
-      generatedId: true,
-      object: true,
+      id: true,
       actor: {
         select: {
-          generatedId: true,
-          name: true,
-          group: true,
+          email: true,
         },
       },
       action: {
         select: {
-          generatedId: true,
-          object: true,
           name: true,
         },
       },
-      target: {
-        select: {
-          generatedId: true,
-          email: true,
-          location: true,
-        },
-      },
       occured_at: true,
-      redirect: true,
-      description: true,
-      x_request_id: true,
     },
+    take: pageNumber * pageLimit,
   });
 
-  let formattedEvents = formatEventResponseData(events);
-
-  return NextResponse.json(formattedEvents, { status: 200 });
+  return NextResponse.json({ events, loadMoreTries }, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
