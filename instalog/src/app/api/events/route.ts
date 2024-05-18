@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const pageNumber: number | null = Number(searchParams!.get('page'));
   const pageLimit: number = 10;
 
-  let loadMoreTries = (await prisma.event.count()) / pageLimit;
+  let loadMoreTries = Math.ceil((await prisma.event.count()) / pageLimit);
 
   let events = await prisma.event.findMany({
     select: {

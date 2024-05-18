@@ -1,18 +1,8 @@
 import dayjs from 'dayjs';
 import { FaAngleRight } from 'react-icons/fa6';
 
+import { event, eventsData } from './types';
 import Loading from '@/app/loading';
-
-type event = {
-  id: string | null | undefined;
-  actor: {
-    email: string | null | undefined;
-  };
-  action: {
-    name: string | null | undefined;
-  };
-  occured_at: string | Date | null | undefined;
-};
 
 function Table({
   data,
@@ -24,7 +14,17 @@ function Table({
   toggleDetails,
   toggleEvents,
   eventsMode,
-}: any) {
+}: {
+  data: eventsData;
+  error: boolean;
+  isLoading: boolean;
+  loadMore: () => void;
+  currentPage: number;
+  eventIDSetter: (eventId: number) => void;
+  toggleDetails: () => void;
+  toggleEvents: () => void;
+  eventsMode: boolean;
+}) {
   if (error) return <div>Failed to load data</div>;
   if (isLoading) return <Loading />;
   return (
@@ -48,7 +48,7 @@ function Table({
         </thead>
         <tbody>
           {data?.events?.map((eventData: event) => (
-            <tr className='table-row h-[46px] bg-white hover:bg-[#FBFBFB]' key={eventData.id}>
+            <tr className='table-row h-[46px] bg-white hover:bg-[#FBFBFB]' key={eventData?.id}>
               <td className='table-cell text-start text-[14px] font-normal'>
                 <span className='ms-[23px] me-[10px] text-[12px] font-bold text-white uppercase w-[9px] h-[15px] px-[8px] py-[5px] rounded-full bg-gradient-to-tl from-[#B325E2] to-[#F3994A]'>
                   {eventData?.actor?.email?.at(0)}
@@ -67,7 +67,7 @@ function Table({
                 <FaAngleRight
                   className='text-[#EEEEEE]'
                   onClick={() => {
-                    eventIDSetter(eventData.id);
+                    eventIDSetter(eventData?.id);
                     toggleEvents();
                     toggleDetails();
                   }}
@@ -77,14 +77,13 @@ function Table({
           ))}
         </tbody>
       </table>
-      {eventsMode && (
-        <button
-          className='w-full flex justify-center items-center h-[52px] bg-[#F5F5F5] text-center uppercase font-semibold text-[14px] text-[#616161] rounded-bl-[14px] rounded-br-[14px] leading-[16.94px] tracking-[2%] disabled:text-[#bdb8b8]'
-          onClick={loadMore}
-          disabled={data?.loadMoreTries === currentPage}>
-          load more
-        </button>
-      )}
+
+      <button
+        className='w-full flex justify-center items-center h-[52px] bg-[#F5F5F5] text-center uppercase font-semibold text-[14px] text-[#616161] rounded-bl-[14px] rounded-br-[14px] leading-[16.94px] tracking-[2%] disabled:text-[#bdb8b8]'
+        onClick={loadMore}
+        disabled={data?.loadMoreTries === currentPage || !eventsMode}>
+        load more
+      </button>
     </>
   );
 }

@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { FaCircle } from 'react-icons/fa6';
 
-function LiveButton({ handleToggleLive, isLive }: { handleToggleLive: any; isLive: boolean }) {
+function LiveButton({
+  handleToggleLive,
+  isLive,
+}: {
+  handleToggleLive: () => void;
+  isLive: boolean;
+}) {
   return (
     <>
       <div

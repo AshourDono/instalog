@@ -26,18 +26,12 @@ function Home({
   const [shouldFetchEvents, setShouldFetchEvents] = useState(true);
   const [shouldFetchDetails, setShouldFetchDetails] = useState(false);
 
-
-  // const handleGetUrl = () => {
-  //   if (keyword) return `/search?query=${keyword}`;
-  //   if (id) return `/${id}`;
-  //   return `?page=${currentPage}`;
-  // };
   const {
     data: eventsData,
     isLoading: eventsLoading,
     error: eventsError,
   } = useSWR(
-    keyword ? `${baseUrl}/search?query=${keyword}`:`${baseUrl}?page=${currentPage}`,
+    keyword ? `${baseUrl}/search?query=${keyword}` : `${baseUrl}?page=${currentPage}`,
     fetcher,
     isLive ? { refreshInterval: 100 } : undefined
   );
@@ -76,13 +70,13 @@ function Home({
   };
 
   return (
-    <main className='flex justify-center items-center min-h-[100vh]'>
-      <div className='bg-[#FFFFFF] w-[933px] border-[1px] border-[#F0F0F0] rounded-[15px] shadow-[0px_3px_5px_0px_rgba(0, 0, 0, 0.02)]'>
+    <main className='flex justify-center items-center'>
+      <div className='bg-[#FFFFFF] h-[622px] mt-[74px] w-[933px] border-[1px] border-[#F0F0F0] rounded-[15px] shadow-[0px_3px_5px_0px_rgba(0, 0, 0, 0.02)]'>
         <nav className='h-[63px] py-[18px] bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px]'>
           <section className='inline-flex justify-center w-[897px] h-[45px] mx-[17px] border-[1px] border-[#E0E0DF] rounded-[8px] text-center divide-x'>
             <SearchButton keyword={keyword} handleSearch={handleSearch} />
-            <FilterButton />
-            <ExportButton />
+            {/* <FilterButton /> */}
+            <ExportButton data={eventsData?.events} />
             <LiveButton handleToggleLive={handleToggleLive} isLive={isLive} />
           </section>
         </nav>

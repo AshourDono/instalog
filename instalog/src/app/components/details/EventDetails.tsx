@@ -2,9 +2,22 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { FaXmark } from 'react-icons/fa6';
 
+import { eventDetails } from './types';
 import Loading from './loading';
 
-function EventDetails({ data, error, isLoading, toggleDetails, toggleEvents }) {
+function EventDetails({
+  data,
+  error,
+  isLoading,
+  toggleDetails,
+  toggleEvents,
+}: {
+  data: eventDetails;
+  error: boolean;
+  isLoading: boolean;
+  toggleDetails: () => void;
+  toggleEvents: () => void;
+}) {
   if (error) return <div>Failed to load data</div>;
   if (isLoading) return <Loading />;
   return (
